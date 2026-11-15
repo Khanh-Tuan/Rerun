@@ -1,0 +1,13 @@
+# Local editor settings
+.claude/
+
+# Xcode (the project is generated from ios/project.yml by XcodeGen)
+ios/Rerun.xcodeproj/
+xcuserdata/
+DerivedData/
+build/
+*.xcarchive
+
+# macOS / Windows clutter
+.DS_Store
+Thumbs.db

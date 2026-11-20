@@ -1,8 +1,11 @@
 # Local editor settings
 .claude/
 
+# Local backup zips
+backups/
+
 # Xcode (the project is generated from ios/project.yml by XcodeGen)
-ios/Rerun.xcodeproj/
+ios/Afterlap.xcodeproj/
 xcuserdata/
 DerivedData/
 build/

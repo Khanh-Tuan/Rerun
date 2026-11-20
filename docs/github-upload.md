@@ -1,9 +1,9 @@
-# Putting Rerun on GitHub (no installs needed)
+# Putting Afterlap on GitHub (no installs needed)
 
 ## First upload
 
 1. Sign in at **github.com**. Click **+** (top right) → **New repository**.
-2. Name it (for example `rerun`), choose **Private**, and leave "Add a README" **unticked**. Click **Create repository**.
+2. Name it (for example `afterlap`), choose **Private**, and leave "Add a README" **unticked**. Click **Create repository**.
 3. On the empty repository page, click the link **uploading an existing file**.
 4. Open the project folder in File Explorer. Select these items and drag them into the browser window:
    - `README.md`

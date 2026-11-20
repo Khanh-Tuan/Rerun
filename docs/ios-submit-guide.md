@@ -23,8 +23,8 @@ Don't share your own Apple ID password. Two-factor codes would come to your devi
 
 1. App Store Connect → **Apps** → **+** → **New App**.
 2. Platform **iOS**. Name: your final game name (it must be unique on the App Store).
-3. **Bundle ID:** pick or register one, for example `com.yourname.rerun`. Tell the builder exactly what it is.
-4. SKU: any internal code, for example `rerun-001`.
+3. **Bundle ID:** pick or register one, for example `com.yourname.afterlap`. Tell the builder exactly what it is.
+4. SKU: any internal code, for example `afterlap-001`.
 
 ### 3. Fill in the listing
 
@@ -56,14 +56,14 @@ Download the repository from GitHub (**Code** → **Download ZIP**) and unzip it
 ### 3. Generate and open the Xcode project
 
 ```
-cd path/to/rerun/ios
+cd path/to/afterlap/ios
 xcodegen
-open Rerun.xcodeproj
+open Afterlap.xcodeproj
 ```
 
 ### 4. Signing and bundle ID
 
-1. Click the **Rerun** project → **Rerun** target → **Signing & Capabilities**.
+1. Click the **Afterlap** project → **Afterlap** target → **Signing & Capabilities**.
 2. Tick **Automatically manage signing** and choose the account owner's **Team**.
 3. Set **Bundle Identifier** to exactly the one from Part A step 2.
 
@@ -94,6 +94,6 @@ For each new upload, raise the build number (`CURRENT_PROJECT_VERSION` in `ios/p
 
 ## Things App Review may look at
 
-- **Minimum functionality (guideline 4.2):** apps that are just a website in a wrapper can be rejected. Rerun is bundled inside the app (fonts included), works fully offline and plays full-screen like a native game, which helps.
-- **Name:** the App Store name must be unique, and "Rerun" may already be taken.
+- **Minimum functionality (guideline 4.2):** apps that are just a website in a wrapper can be rejected. Afterlap is bundled inside the app (fonts included), works fully offline and plays full-screen like a native game, which helps.
+- **Name:** the App Store name must be unique. Creating the app record in Part A step 2 tells you straight away if "Afterlap" is taken.
 - **Encryption export question:** the project already declares that the app uses no non-exempt encryption.

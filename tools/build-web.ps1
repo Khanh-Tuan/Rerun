@@ -1,11 +1,11 @@
-# Builds web/index.html (the standalone page the iOS app loads) from src/rerun.html.
-# Run from the project root after editing src/rerun.html:
+# Builds web/index.html (the standalone page the iOS app loads) from src/afterlap.html.
+# Run from the project root after editing src/afterlap.html:
 #   powershell -ExecutionPolicy Bypass -File tools\build-web.ps1
 # Works in Windows PowerShell 5.1 and in PowerShell 7 (pwsh) on macOS.
 
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
-$src  = Join-Path $root 'src/rerun.html'
+$src  = Join-Path $root 'src/afterlap.html'
 $out  = Join-Path $root 'web/index.html'
 
 $game = [System.IO.File]::ReadAllText($src)

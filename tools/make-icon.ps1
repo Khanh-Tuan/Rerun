@@ -4,7 +4,7 @@
 
 Add-Type -AssemblyName System.Drawing
 $root = Split-Path -Parent $PSScriptRoot
-$out  = Join-Path $root 'ios/Rerun/Assets.xcassets/AppIcon.appiconset/icon-1024.png'
+$out  = Join-Path $root 'ios/Afterlap/Assets.xcassets/AppIcon.appiconset/icon-1024.png'
 
 $S = 1024
 $bmp = New-Object System.Drawing.Bitmap($S, $S, [System.Drawing.Imaging.PixelFormat]::Format24bppRgb)

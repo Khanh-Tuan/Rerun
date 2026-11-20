@@ -1,6 +1,6 @@
-# XcodeGen spec: on the Mac, run `xcodegen` in this folder to create Rerun.xcodeproj.
+# XcodeGen spec: on the Mac, run `xcodegen` in this folder to create Afterlap.xcodeproj.
 # See docs/ios-submit-guide.md for the full steps.
-name: Rerun
+name: Afterlap
 options:
   bundleIdPrefix: com.example
   deploymentTarget:
@@ -8,18 +8,18 @@ options:
   createIntermediateGroups: true
 
 targets:
-  Rerun:
+  Afterlap:
     type: application
     platform: iOS
     sources:
-      - path: Rerun
+      - path: Afterlap
       - path: ../web          # the game; copied into the app as a "web" folder
         type: folder
         buildPhase: resources
     settings:
       base:
-        PRODUCT_NAME: Rerun
-        PRODUCT_BUNDLE_IDENTIFIER: com.example.rerun   # CHANGE to your own, e.g. com.yourname.rerun
+        PRODUCT_NAME: Afterlap
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.afterlap   # CHANGE to your own, e.g. com.yourname.afterlap
         MARKETING_VERSION: "1.0"
         CURRENT_PROJECT_VERSION: "1"
         TARGETED_DEVICE_FAMILY: "1"                    # iPhone only for the first release
@@ -28,7 +28,7 @@ targets:
         DEVELOPMENT_TEAM: ""                           # pick your team in Xcode > Signing & Capabilities
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         GENERATE_INFOPLIST_FILE: YES
-        INFOPLIST_KEY_CFBundleDisplayName: Rerun
+        INFOPLIST_KEY_CFBundleDisplayName: Afterlap
         INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.arcade-games
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         INFOPLIST_KEY_UIStatusBarHidden: YES

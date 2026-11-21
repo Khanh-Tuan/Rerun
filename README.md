@@ -17,7 +17,10 @@ The game itself is a single HTML/JavaScript file. The iOS app is a small Swift w
 | `docs/ios-submit-guide.md` | Step-by-step guide for building on a Mac and submitting to the App Store. |
 | `docs/privacy-policy.md` | Privacy policy text to publish (Apple requires a privacy policy URL). |
 | `docs/online-setup.md` | Setting up the free Supabase project that runs online rooms. |
+| `docs/leaderboard-setup.md` | Setting up leaderboards, accounts and cloud saves (email codes, test mode, moderation). |
+| `docs/premium-skins-setup.md` | Creating the premium skin products in App Store Connect and testing purchases. |
 | `supabase/setup.sql` | The online rooms database. Run once in Supabase. |
+| `supabase/leaderboard.sql` | Leaderboards, accounts, verified runs and cloud saves. Run after `setup.sql`. |
 
 ## Changing the game
 
@@ -113,7 +116,7 @@ Under the hood:
 | Server: rooms, codes, seats, timeouts, score checks | `supabase/setup.sql` (run once in your Supabase project) |
 | Client | the "Online: private rooms" block in `src/afterlap.html` |
 | Supabase connection details | `const ONLINE = { url, key }` in that block |
-| Supabase JavaScript client | `web/vendor/supabase.js` (MIT licence next to it), loaded only when someone opens Online |
+| Supabase JavaScript client | `web/vendor/supabase.js` (MIT licence next to it), loaded when someone starts a run, opens Ranks or opens Online |
 
 Setup steps are in `docs/online-setup.md`. Until `ONLINE` is filled in, the Online screen says online play isn't set up, and the rest of the game is unaffected.
 
@@ -121,14 +124,30 @@ The game only sends the lap count, close calls and alive/out status, on each lap
 
 Refreshing or reopening the app puts you back in your room. A run in progress can't survive a reload, so it ends at the last lap the server saw. Short connection drops show "Reconnecting…" and the run carries on. After 60 seconds of silence the server ends that player's run and marks them as left.
 
+## Leaderboards and accounts
+
+The trophy button on the title screen opens **Ranks**: Global, Region and Country boards (top 1,000, loaded 50 rows at a time), with your own rank on all three always shown at the top, even outside the top 1,000. Top three get gold, silver and bronze; NEW and ▲ PB tags mark new entries and improved bests; a green dot means that player is playing now. Regions: North America, Europe, Oceania, Asia, Southeast Asia, Latin America, Middle East & Africa (`COUNTRY_TABLE` in the game and `lb_countries` in `leaderboard.sql`; keep them in step).
+
+- **Guests** play straight away, with everything saved on the device. Each solo run is timed by the server in the background, so a guest's best is already verified.
+- **The invitation.** When a guest's run is a new verified best of 3+ laps that would make a top 1,000 (checked live against the board), a "You made the leaderboard!" screen offers **Claim my rank** or **Not now**. Not now keeps the claim waiting in Ranks and on the game-over card.
+- **Accounts** use a 6-digit email code (no password). Creating one adds the email to the guest's existing player, so the ID, verified scores and all progress carry over. Signing in to an existing account from a guest hands the guest's verified runs to it with a one-time token. Then the player picks a display name (unique, 3–16 characters) and confirms a country (guessed from the connection or time zone; never GPS) with an option to hide it (hidden = Global board only).
+- **Cloud save** keeps the whole progress (bests, stars, skins, awards, dailies, stats) online and merges between devices: skins and awards combine, bests and stats keep the higher value, and stars apply what each device earned or spent since the last sync, so nothing is lost or doubled.
+- **New personal bests** for ranked players show "Climbed N places · OCEANIA #124 → #100" on the game-over card, and the rank line shows all three ranks.
+- **Account screen**: player card, ID, joined date, stats, sync status, edit, sign out, delete account.
+
+Score checks (server side): the dot's speed is fixed by the speed curve, so N laps take a known minimum time; finishes faster than that are rejected, each run can be finished once, run starts are rate-limited (one per 1.5 s, 600 a day), and scores far above everyone else's are stored as `flagged` and kept off the boards for review. Lane-switch times are stored with each run for audits and future replay checks. This stops edited requests, impossible scores, duplicates and spam; it can't fully stop a bot that genuinely plays in real time.
+
+Setup, test mode and moderation: `docs/leaderboard-setup.md`. Client code: the "Accounts, leaderboards and cloud save" section of `src/afterlap.html`.
+
 ## Skins, awards and daily challenges
 
 All of this is data near the top of the script, so adding content doesn't mean touching the game logic:
 
 | List | What it holds |
 |---|---|
-| `THEMES` | The 19 skin sets (tabs in the Skins screen, after "All skins"). |
-| `SKINS` | 158 skins. Each line gives the set, rarity, how it unlocks and its look. |
+| `THEMES` | The 19 earned skin sets (tabs in the Skins screen, after "All"). |
+| `PTHEMES` | The 10 premium sets of 5 (Abyssal Depths, Ancient Pantheon, Celestial, Clockwork Age, Cyberpunk, Dark Fantasy, Elemental Lords, Legendary Heroes, Mythic Beasts, Otherworldly). |
+| `SKINS` | 588 skins: 538 earned by playing and 50 premium. The original 158 come first, then the expansion (`XS(...)`, 20 per set), then the premium skins (`PS(...)`). |
 | `SEASONS` | Date windows for the seasonal skins (Halloween, Christmas, Valentine, Spring, Summer). |
 | `ACH` | 32 awards (9 of them secret). Each gives stars or a skin. |
 | `DAILY` | The pool of daily challenges (easy, medium and hard). |
@@ -155,7 +174,13 @@ The comment above `RARITY` lists every field, including the extra colours some p
 
 Seasonal skins come back every year and always have the lap route, so nobody is locked out for good. The Summer window (15 Jun to 31 Aug) follows the northern hemisphere.
 
-The Skins screen has an "All skins" tab with filters for set, rarity and owned/locked, and sorting by set, rarity, name or newest.
+- `'premium'`: bought with real money (premium skins only, made with `PS(id, name, set, price, desc, look)`).
+
+Expansion skins (made with `XS(set, rows)`) are marked `x: 1` and don't count towards a set's bonus skin, so the bonus requirements are exactly what they were before the expansion.
+
+**Skins screen.** Two sections at the top: **Earned** (everything unlocked by playing) and **Premium**. Inside a section, set tabs and skins are sorted A to Z automatically (`localeCompare`), so a new skin lands in the right place without any manual ordering; hidden secret skins sort last. The "All" view adds a search box, filters for set, rarity and owned/locked, and sorting by set A–Z, name A–Z, rarity or newest. Every card and the preview show one status: Equipped, Owned, Unlock (enough stars or conditions met), Locked, or a price for premium skins.
+
+**Premium skins** are cosmetic only: same shape radius, same hitbox, same speed. They use the extra `pfx` effects (auras, orbiting particles, wings, portals, rising bubbles, angler lures, turning gears, steam, sun discs, feathers, snowflakes) and premium trails, which are drawn only. To add a premium set, add it to `PTHEMES`; tabs sort A to Z by themselves. They are excluded from the collection awards and the "skins owned" count, so free players can still complete everything. Buying opens a sheet with the price, "one-time purchase, cosmetic only", and Buy / Not now; there are no pop-ups or reminders elsewhere. The purchase itself goes through `ios/Afterlap/Purchases.swift` (StoreKit 2) with product IDs `afterlap.skin.<id>`. In a browser there's no store, so premium skins can be previewed but not bought.
 
 Progress is saved on the device in localStorage (`rerun-best`, `rerun-stars`, `rerun-owned`, `rerun-skin`, `rerun-muted`, `rerun-duel` for the two duel skins, `rerun-intro` once the intro has been seen, `rerun-name` and `rerun-online-room` and `rerun-online-auth` for online play, and `rerun-profile` for stats, awards, dailies and laps driven per set).
 

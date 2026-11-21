@@ -32,9 +32,9 @@ Don't share your own Apple ID password. Two-factor codes would come to your devi
 - **Description, keywords, support URL.**
 - **Screenshots:** App Store Connect shows the required iPhone sizes. The builder can take them in the iOS Simulator (File → Save Screen).
 - **Privacy policy URL:** publish `docs/privacy-policy.md` somewhere public (a simple web page) and paste the link.
-- **App Privacy:** the game collects no data and makes no network requests (fonts are bundled), so you can answer **Data Not Collected**.
+- **App Privacy:** since leaderboards and accounts were added, the answer is no longer "Data Not Collected". Declare: **Email Address** (only with an account, for sign-in codes), **User ID** (the random player ID), and **Gameplay Content** (scores and the online save). All of these are linked to the user, used for **App Functionality**, and *not* used for tracking. Purchases go through Apple; the game never sees payment details.
 - **Age rating questionnaire:** no violence, no gambling, no user content. It should come out at the lowest rating.
-- **Price:** free or paid. The game has no in-app purchases (stars are earned only by playing).
+- **Price:** free. Stars are earned only by playing. The only in-app purchases are the optional cosmetic premium skins; see `docs/premium-skins-setup.md` to create them before submitting.
 
 ---
 

@@ -13,8 +13,10 @@ struct GameView: UIViewRepresentable {
         config.allowsInlineMediaPlayback = true
         config.mediaTypesRequiringUserActionForPlayback = []
         config.websiteDataStore = .default() // keeps best score, stars and skins between launches
+        config.userContentController.add(context.coordinator.purchases, name: "iap") // premium skins (Purchases.swift)
 
         let web = WKWebView(frame: .zero, configuration: config)
+        context.coordinator.purchases.web = web
         web.isOpaque = false
         web.backgroundColor = Self.background
         web.scrollView.backgroundColor = Self.background
@@ -34,6 +36,8 @@ struct GameView: UIViewRepresentable {
 
     /// Opens any outside link in Safari instead of inside the game.
     final class Coordinator: NSObject, WKNavigationDelegate {
+        let purchases = Purchases()
+
         func webView(_ webView: WKWebView,
                      decidePolicyFor action: WKNavigationAction,
                      decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
